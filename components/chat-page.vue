@@ -10,8 +10,8 @@
       <img src="/dog.png" class="icon" />
       <h3>chatGPT API 測試</h3>
       <form @submit.prevent="onSubmit">
-        <input type="text" name="animal" placeholder="Enter an animal" v-model="animalInput" />
-        <input type="submit" value="Generate names" />
+        <input type="text" name="content" placeholder="輸入訊息" v-model="content" />
+        <input type="submit" value="發送訊息" />
       </form>
       <div class="result">{{ result }}</div>
     </main>
@@ -24,17 +24,17 @@ import { ref } from 'vue';
 export default {
   name: "Home",
   setup() {
-    const animalInput = ref("");
+    const content = ref("");
     const result = ref("");
 
     async function onSubmit() {
       try {
-        const response = await fetch("/api/chat2", {
+        const response = await fetch("/api/chat", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ animal: animalInput.value }),
+          body: JSON.stringify({ content: content.value }),
         });
 
         const data = await response.json();
@@ -43,7 +43,7 @@ export default {
         }
 
         result.value = data.result;
-        animalInput.value = "";
+        content.value = "";
       } catch (error) {
         // Consider implementing your own error handling logic here
         console.error(error);
@@ -51,7 +51,7 @@ export default {
       }
     }
 
-    return { animalInput, result, onSubmit };
+    return { content, result, onSubmit };
   },
 };
 </script>
