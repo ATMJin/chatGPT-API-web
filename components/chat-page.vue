@@ -9,10 +9,8 @@
     <main class="main">
       <img src="/dog.png" class="icon" />
       <h3>chatGPT API 測試</h3>
-      <form @submit.prevent="onSubmit">
-        <input type="text" name="content" placeholder="輸入訊息" v-model="content" />
-        <input type="submit" value="發送訊息" />
-      </form>
+      <input type="text" name="content" placeholder="輸入訊息" v-model="content" />
+      <button @click="onSubmit">發送訊息</button>
       <div class="result">{{ result }}</div>
     </main>
   </div>
@@ -57,5 +55,5 @@ export default {
 </script>
 
 <style>
-@import "/index.module.css";
+@import "assets/index.module.css";
 </style>

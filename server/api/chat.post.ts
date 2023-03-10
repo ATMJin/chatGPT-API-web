@@ -27,16 +27,20 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
 
     const messages: Message[] = [];
+    // messages.push({ role: Role.SYSTEM, content: "你會用'主人'來稱呼使用者'" });
     messages.push({ role: Role.USER, content: body.content });
     const option: Option = {
-      temperature: 1,
-      max_tokens: 5,
+      temperature: 0.5,
+      max_tokens: 100,
+      logit_bias: { 11505: -50, 20185: -50, 1872: -50 }
     };
 
     const Request: CreateChatCompletionRequest = {
       model: Model.GPT_TURBO,
       messages: messages,
       temperature: option.temperature,
+      max_tokens: option.max_tokens,
+      logit_bias: option.logit_bias,
     };
 
     const completion = await openai.createChatCompletion(Request);
@@ -51,6 +55,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const result = completion.data.choices[0].message.content;
+    const usage = completion.data.usage;
 
     const chat_data: DB_Chat = {
       model: Model.GPT_TURBO,
@@ -58,6 +63,12 @@ export default defineEventHandler(async (event) => {
       result: result,
       time: formateDate(new Date()),
       option: option,
+      finish_reason: completion.data.choices[0].finish_reason,
+      usage: {
+        prompt_tokens: usage?.prompt_tokens,
+        completion_tokens: usage?.completion_tokens,
+        total_tokens: usage?.total_tokens,
+      }
     };
 
     await connectToDatabase();

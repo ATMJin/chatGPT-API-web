@@ -11,6 +11,17 @@ export class DB_Chat {
   result: string = "";
   /** 時間 yyyy-MM-dd HH:mm:ss*/
   time: string = "";
+  /** 結束原因 */
+  finish_reason?: string;
+  /** 使用token數 */
+  usage?: {
+    /** 發送 */
+    prompt_tokens?: number;
+    /** 生成 */
+    completion_tokens?: number;
+    /** 總共 */
+    total_tokens?: number;
+  };
 }
 
 export class Option {

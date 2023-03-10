@@ -9,8 +9,8 @@ export const connectToDatabase = async () => {
   client = await MongoClient.connect(URI);
   db = client.db();
   collection_chat = db.collection("chat");
-  console.log(db);
-  console.log(collection_chat);
+  // console.log(db);
+  // console.log(collection_chat);
 };
 
 export const getDb = () => {
