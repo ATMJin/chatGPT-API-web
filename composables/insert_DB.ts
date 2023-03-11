@@ -5,7 +5,7 @@ export const insertChatMessage = async (chat_data: DB_Chat) => {
   console.log("inserting");
   // console.log("data:", chat_data);
   const collection = getCollection();
-  collection.insertOne(chat_data);
+  await collection.insertOne(chat_data);
   console.log("inserted");
   console.log("data_base:", await collection.findOne(chat_data));
 

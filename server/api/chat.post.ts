@@ -27,20 +27,27 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
 
     const messages: Message[] = [];
-    // messages.push({ role: Role.SYSTEM, content: "你會用'主人'來稱呼使用者'" });
+    messages.push({ role: Role.SYSTEM, content: "你是一位聽從使用者命令的女僕，你會用'主人'來稱呼使用者'。" });
     messages.push({ role: Role.USER, content: body.content });
-    const option: Option = {
+    const option = new Option({
       temperature: 0.5,
       max_tokens: 100,
-      logit_bias: { 11505: -50, 20185: -50, 1872: -50 }
-    };
+      logit_bias: {
+        11505: -100, // "Open"
+        4946: -100, // " Open"
+        20185: -100, // "AI"
+        9552: -100, // " AI"
+        1872: -100, // "ai"
+        17180: -100, // " apple"
+      }
+    });
 
     const Request: CreateChatCompletionRequest = {
       model: Model.GPT_TURBO,
       messages: messages,
-      temperature: option.temperature,
-      max_tokens: option.max_tokens,
-      logit_bias: option.logit_bias,
+      temperature: option.temperature || undefined,
+      max_tokens: option.max_tokens || undefined,
+      logit_bias: option.logit_bias || undefined,
     };
 
     const completion = await openai.createChatCompletion(Request);

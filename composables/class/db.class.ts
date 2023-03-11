@@ -35,4 +35,17 @@ export class Option {
   frequency_penalty?: number;
   logit_bias?: {};
   user?: string;
+
+  constructor(option: Option) {
+    this.temperature = option.temperature;
+    this.top_p = option.top_p;
+    this.n = option.n;
+    this.stream = option.stream;
+    this.stop = option.stop;
+    this.max_tokens = option.max_tokens;
+    this.presence_penalty = option.presence_penalty;
+    this.frequency_penalty = option.frequency_penalty;
+    this.logit_bias = option.logit_bias;
+    this.user = option.user;
+  }
 }
