@@ -1,21 +1,15 @@
-# Nuxt 3 Minimal Starter
+# ChatGPT API 測試
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+用 ChatGPT 官方提供的快速啟動範例，把他的 Next.js 改成 Nuxt.js，並且把 API 改成自己的。
+順便利用 ChatGPT + Github Copilot 快速學習 Nuxt.js 和 MongoDB 的使用。
 
-## Setup
+目標是加上控制各種參數的介面，方便在前端控制參數進行調整，不用再直接改程式碼。
+還有加上連續對話的功能，目前只有單一問答。
+最後是使用 docker 部屬，順便練習 docker 的使用。
 
-Make sure to install the dependencies:
+## 環境
 
-```bash
-# yarn
-yarn install
-
-# npm
-npm install
-
-# pnpm
-pnpm install
-```
+使用 Vue3 + Nuxt3 + MongoDB
 
 ## Development Server
 
