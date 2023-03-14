@@ -1,5 +1,5 @@
-import { connectToDatabase } from '~~/composables/connect_DB';
-import { getLastOption } from '~~/composables/find_DB';
+import { connectToDatabase, getCollection } from '~~/composables/connect_DB';
+import { getLastOption, getLastContinuation } from '~~/composables/find_DB';
 
 export default defineEventHandler(async (event) => {
   try {
@@ -8,17 +8,16 @@ export default defineEventHandler(async (event) => {
     console.log("API onInit connectToDatabase Success");
     const option = await getLastOption();
     console.log("option: ", option);
+    const continuation = await getLastContinuation();
 
     return {
       option: option,
+      continuation: continuation,
     };
-  } catch { 
+  } catch {
+    // throw new Error("API onInit Error");
     return {
-      ok: true,
-      result: 'Hello World!',
-      event: event.path
+      option: {},
     };
   }
-
-
 });

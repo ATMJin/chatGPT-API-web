@@ -22,6 +22,8 @@ export class DB_Chat {
     /** 總共 */
     total_tokens?: number;
   };
+  /** 是否連續對話 */
+  continuation?: boolean;
 }
 
 export class Option {

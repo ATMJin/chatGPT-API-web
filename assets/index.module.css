@@ -55,6 +55,29 @@
   outline-color: #10a37f;
 }
 
+.main input[type="checkbox"] {
+  /* 设置 checkbox 颜色 */
+  --checkbox-color: #fff;
+  /* 设置 checkbox 尺寸 */
+  --checkbox-size: 32px;
+  /* 禁用默认样式 */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  background-color: var(--checkbox-color);
+  border: 1px solid #10a37f;
+  outline-color: #10a37f;
+  border-radius: 4px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #10a37f;
+}
+
 .main ::placeholder {
   color: #8e8ea0;
   opacity: 1;

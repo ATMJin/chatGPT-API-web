@@ -14,7 +14,7 @@
         <input type="text" name="content" placeholder="輸入訊息" v-model="content" />
         <button @click="goChat">發送訊息</button>
         <button @click="sendTest">測試</button>
-        <div class="result">{{ result }}</div>
+        <p class="result">{{ result }}</p>
         <!-- 一個讀取中的圖案 -->
         <div v-if="showLoading" class="loading">
           <img src="~~/assets/loading.gif" />
@@ -36,6 +36,10 @@
         <label>stop(,):
           <input type="text" v-model="option_web.stop">
         </label>
+        <label>連續對話:
+          <input type="checkbox" v-model="continuation">
+        </label>
+        <button @click="restart" style="padding: 12px;">Restart</button>
       </div>
     </main>
 
@@ -60,6 +64,7 @@ export default {
       n: 1,
       stop: undefined
     });
+    const continuation = ref(false);
 
     const sendTest = async () => {
       showLoading.value = true;
@@ -70,7 +75,10 @@ export default {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ content: content.value }),
+          body: JSON.stringify({
+            content: content.value,
+            continuation: continuation.value
+          }),
         });
         showLoading.value = false;
 
@@ -101,7 +109,8 @@ export default {
           },
           body: JSON.stringify({
             content: content.value,
-            option
+            option,
+            continuation: continuation.value
           }),
         });
 
@@ -125,12 +134,30 @@ export default {
       console.log("onInit");
 
       try {
-        const response = await fetch("/api/onInit");
+        const response = await fetch("/api/onInit", {
+          method: "GET"
+        });
         const data = await response.json();
         console.log("data", data);
         const option_DB = data.option;
         option_web.value = option_DB;
+        const continuation_DB = data.continuation;
+        continuation.value = continuation_DB;
 
+        console.log("onInit end");
+      } catch (error: any) {
+        console.error(error);
+      }
+    };
+
+    const restart = async () => {
+      console.log("restart");
+      try {
+        const res = await fetch("/api/restart");
+        result.value = "";
+        continuation.value = false;
+        console.log("restart end");
+        console.log(res);
       } catch (error: any) {
         console.error(error);
       }
@@ -138,7 +165,7 @@ export default {
 
     onInit();
 
-    return { content, result, showLoading, option_web, onInit, goChat, sendTest };
+    return { content, result, showLoading, option_web, continuation, onInit, goChat, sendTest, restart };
   },
 };
 </script>

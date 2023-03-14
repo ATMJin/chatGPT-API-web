@@ -1,5 +1,6 @@
 import { connectToDatabase } from '~~/composables/connect_DB';
 import { insertChatMessage } from '~~/composables/insert_DB';
+import { getLastMessage, getLastResult } from '~~/composables/find_DB';
 import {
   Configuration,
   CreateChatCompletionRequest,
@@ -26,10 +27,28 @@ export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event);
     const content_from_web = body.content;
+    const initSystemMessage: Message[] = [
+      { role: Role.SYSTEM, content: "你是一位聽從使用者命令的女僕，你會用'主人'來稱呼使用者'。" },
+      { role: Role.ASSISTANT, content: "是的，主人。我會完全聽從您的命令" },
+    ];
 
     const messages: Message[] = [];
-    messages.push({ role: Role.SYSTEM, content: "你是一位聽從使用者命令的女僕，你會用'主人'來稱呼使用者'。" });
+    if (body.continuation) {
+      const lastMessage = await getLastMessage();
+      const lastResult = await getLastResult();
+      if (!!lastMessage.length) {
+        messages.push(...lastMessage);
+        messages.push({ role: Role.ASSISTANT, content: lastResult });
+      } else {
+        messages.push(...initSystemMessage);
+      }
+    } else {
+      messages.push(...initSystemMessage);
+    }
     messages.push({ role: Role.USER, content: content_from_web });
+
+    console.log("messages: ", messages);
+
     const option = new Option(body.option);
     option.logit_bias = {
       11505: -100,  // "Open"
@@ -43,9 +62,13 @@ export default defineEventHandler(async (event) => {
       model: Model.GPT_TURBO,
       messages: messages,
       temperature: option.temperature || undefined,
+      top_p: option.top_p || undefined,
       max_tokens: option.max_tokens || undefined,
       logit_bias: option.logit_bias || undefined,
+      n: option.n || undefined,
+      stop: option.stop || undefined,
     };
+    console.log("Request: ", Request);
 
     const completion = await openai.createChatCompletion(Request);
 
@@ -72,7 +95,8 @@ export default defineEventHandler(async (event) => {
         prompt_tokens: usage?.prompt_tokens,
         completion_tokens: usage?.completion_tokens,
         total_tokens: usage?.total_tokens,
-      }
+      },
+      continuation: body.continuation,
     };
 
     await connectToDatabase();
