@@ -1,6 +1,6 @@
 import { Message } from "./class/chat.class";
 import { Option } from "./class/db.class";
-import { getCollection } from "./connect_DB";
+import { getCollection, getCollectionSystem } from "./connect_DB";
 
 /** 從資料庫取得上一次的參數 */
 export const getLastOption = async (): Promise<Option> => {
@@ -67,3 +67,21 @@ export const getLastContinuation = async (): Promise<boolean> => {
     return last[0].continuation;
   }
 };
+
+/** 從資料庫取得全部對話設定類型 */
+export const getAllType = async (): Promise<string[]> => {
+  console.log("getAllType Start");
+  const collection = getCollectionSystem();
+
+  const all = await collection.find().toArray();
+  console.log("all: ", all);
+
+  if (!all.length) {
+    console.log("getAllType Error");
+    return [];
+  } else {
+    const type_list: string[] = all.map((item) => item.type);
+    return type_list;
+  }
+}
+

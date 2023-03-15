@@ -11,6 +11,76 @@
 
 使用 Vue3 + Nuxt3 + MongoDB
 
+## DB schema
+
+### chat
+
+```ts
+{
+    // 使用的模型
+    model: string,
+    // 訊息
+    messages: [
+        {
+            // 角色
+            role: string ,
+            // 內容
+            content: string,
+        },
+    ],
+    // 回覆
+    result: string,
+    // 建立時間 yyyy-MM-dd HH:mm:ss
+    time: string,
+    // 參數
+    option: {
+        temperature: number,
+        top_p: number,
+        n: number,
+        stream: boolean,
+        stop: string | string[],
+        max_tokens: number,
+        presence_penalty: number,
+        frequency_penalty: number,
+        logit_bias: {
+            number: number,
+        },
+        user: string
+    },
+    // 結束原因
+    finish_reason: string,
+    // 使用的 token 數量
+    usage: {
+        // 上行
+        prompt_tokens: number,
+        // 下行
+        completion_tokens: number,
+        // 總共
+        total_tokens: number
+    },
+    // 是否為連續對話
+    continuation: boolen,
+}
+```
+
+### system_setting
+
+```ts
+{
+  // 類型
+  type: string,
+  // 訊息
+  message: [
+    {
+      // 角色
+      role: string,
+      // 內容
+      content: string,
+    },
+  ],
+}
+```
+
 ## Development Server
 
 Start the development server on http://localhost:3000

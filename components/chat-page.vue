@@ -21,6 +21,10 @@
         </div>
       </div>
       <div class="option">
+        <select name="" id="" v-model="type">
+          <option value="" disabled>請選擇設定</option>
+          <option v-for="item in type_list" :value="item">{{ item }}</option>
+        </select>
         <label>temperature:
           <input type="text" v-model.number="option_web.temperature">
         </label>
@@ -65,6 +69,8 @@ export default {
       stop: undefined
     });
     const continuation = ref(false);
+    const type_list = ref<string[]>([]);
+    const type = ref("");
 
     const sendTest = async () => {
       showLoading.value = true;
@@ -143,6 +149,8 @@ export default {
         option_web.value = option_DB;
         const continuation_DB = data.continuation;
         continuation.value = continuation_DB;
+        const type_list_DB = data.type_list;
+        type_list.value = type_list_DB;
 
         console.log("onInit end");
       } catch (error: any) {
@@ -165,7 +173,7 @@ export default {
 
     onInit();
 
-    return { content, result, showLoading, option_web, continuation, onInit, goChat, sendTest, restart };
+    return { content, result, showLoading, option_web, continuation, type, type_list, onInit, goChat, sendTest, restart };
   },
 };
 </script>
