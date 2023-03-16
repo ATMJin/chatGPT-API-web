@@ -83,5 +83,21 @@ export const getAllType = async (): Promise<string[]> => {
     const type_list: string[] = all.map((item) => item.type);
     return type_list;
   }
-}
+};
 
+/** 從資料庫取得指定對話設定類型的預設初始訊息 */
+export const getInitMessage = async (type: string): Promise<Message[]> => {
+  console.log("getInitMessage Start");
+  const collection = getCollectionSystem();
+
+  const data = await collection.findOne({ type: type });
+  console.log("data: ", data);
+
+  if (!data) {
+    console.log("getInitMessage Error");
+    return [];
+  } else {
+    const init_message = data.message;
+    return init_message ?? [];
+  }
+};

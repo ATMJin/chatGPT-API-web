@@ -83,7 +83,8 @@ export default {
           },
           body: JSON.stringify({
             content: content.value,
-            continuation: continuation.value
+            continuation: continuation.value,
+            type: type.value
           }),
         });
         showLoading.value = false;
@@ -116,7 +117,8 @@ export default {
           body: JSON.stringify({
             content: content.value,
             option,
-            continuation: continuation.value
+            continuation: continuation.value,
+            type: type.value
           }),
         });
 

@@ -1,6 +1,6 @@
 import { connectToDatabase } from '~~/composables/connect_DB';
 import { insertChatMessage } from '~~/composables/insert_DB';
-import { getLastMessage, getLastResult } from '~~/composables/find_DB';
+import { getLastMessage, getLastResult, getInitMessage } from '~~/composables/find_DB';
 import {
   Configuration,
   CreateChatCompletionRequest,
@@ -25,12 +25,11 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    await connectToDatabase();
+
     const body = await readBody(event);
     const content_from_web = body.content;
-    const initSystemMessage: Message[] = [
-      { role: Role.SYSTEM, content: "你是一位聽從使用者命令的女僕，你會用'主人'來稱呼使用者'。" },
-      { role: Role.ASSISTANT, content: "是的，主人。我會完全聽從您的命令" },
-    ];
+    const initSystemMessage: Message[] = await getInitMessage(body.type);
 
     const messages: Message[] = [];
     if (body.continuation) {
@@ -99,7 +98,6 @@ export default defineEventHandler(async (event) => {
       continuation: body.continuation,
     };
 
-    await connectToDatabase();
     await insertChatMessage(chat_data);
 
     return {
