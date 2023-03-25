@@ -173,7 +173,11 @@ export default {
       }
     };
 
-    onInit();
+    onBeforeMount(() => {
+      onInit();
+    });
+
+
 
     return { content, result, showLoading, option_web, continuation, type, type_list, onInit, goChat, sendTest, restart };
   },
