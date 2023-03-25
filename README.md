@@ -104,3 +104,11 @@ npm run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## TODO
+
+- [ ] docker內連接本機mongoDB
+- [ ] 頁面輸入框改成 textarea
+- [ ] 頁面結果輸出框增加因應n值切換輸出內容
+- [ ] DB的result因應n值儲存成string[]
+- [ ] 連續輸入模式時加上目前頁面上選擇的結果
