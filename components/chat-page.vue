@@ -11,10 +11,12 @@
       <div class="main" style="padding-top: 0;">
         <img src="/dog.png" class="icon" />
         <h3>chatGPT API 測試</h3>
-        <input type="text" name="content" placeholder="輸入訊息" v-model="content" />
+        <!-- <input type="text" name="content" placeholder="輸入訊息" v-model="content" /> -->
+        <textarea name="content" placeholder="輸入訊息" v-model="content" cols="30" rows="10"></textarea>
         <button @click="goChat">發送訊息</button>
-        <button @click="sendTest">測試</button>
-        <p class="result">{{ result }}</p>
+        <button @click="result_index--"> &lt; </button>
+        <p class="result">{{ result[result_index] }}</p>
+        <button @click="result_index++"> &gt; </button>
         <!-- 一個讀取中的圖案 -->
         <div v-if="showLoading" class="loading">
           <img src="~~/assets/loading.gif" />
@@ -25,20 +27,8 @@
           <option value="" disabled>請選擇設定</option>
           <option v-for="item in type_list" :value="item">{{ item }}</option>
         </select>
-        <label>temperature:
-          <input type="text" v-model.number="option_web.temperature">
-        </label>
-        <label>top_p:
-          <input type="text" v-model.number="option_web.top_p">
-        </label>
-        <label>max_tokens:
-          <input type="text" v-model.number="option_web.max_tokens">
-        </label>
-        <label>n:
-          <input type="text" v-model.number="option_web.n">
-        </label>
-        <label>stop(,):
-          <input type="text" v-model="option_web.stop">
+        <label v-for="item in option_list">{{ item.label }}
+          <input type="text" v-model.number="option_web[item.option]">
         </label>
         <label>連續對話:
           <input type="checkbox" v-model="continuation">
@@ -58,8 +48,18 @@ export default {
   name: "Home",
   setup() {
     const content = ref("");
-    const result = ref("");
+    const result = ref<string[]>([""]);
     const showLoading = ref(false);
+    const option_list = ref<{
+      label: string;
+      option: keyof Option;
+    }[]>([
+      { label: "temperature", option: "temperature" },
+      { label: "top_p", option: "top_p" },
+      { label: "max_tokens", option: "max_tokens" },
+      { label: "n", option: "n" },
+      { label: "stop(,)", option: "stop" },
+    ]);
 
     const option_web = ref<Option>({
       temperature: 1,
@@ -71,6 +71,7 @@ export default {
     const continuation = ref(false);
     const type_list = ref<string[]>([]);
     const type = ref("");
+    const result_index = ref(0);
 
     const sendTest = async () => {
       showLoading.value = true;
@@ -94,7 +95,7 @@ export default {
           throw data.error || new Error(`Request failed with status ${response.status}`);
         }
 
-        result.value = data.result;
+        result.value = Array.isArray(data.result) ? data.result : [data.result];
         content.value = "";
       } catch (error: any) {
         // Consider implementing your own error handling logic here
@@ -128,8 +129,9 @@ export default {
           throw data.error || new Error(`Request failed with status ${response.status}`);
         }
 
-        result.value = data.result;
+        result.value = Array.isArray(data.result) ? data.result : [data.result];
         content.value = "";
+
       } catch (error: any) {
         // Consider implementing your own error handling logic here
         console.error(error);
@@ -164,7 +166,7 @@ export default {
       console.log("restart");
       try {
         const res = await fetch("/api/restart");
-        result.value = "";
+        result.value = [""];
         continuation.value = false;
         console.log("restart end");
         console.log(res);
@@ -177,9 +179,7 @@ export default {
       onInit();
     });
 
-
-
-    return { content, result, showLoading, option_web, continuation, type, type_list, onInit, goChat, sendTest, restart };
+    return { content, result, showLoading, option_web, continuation, type, type_list, option_list, result_index, onInit, goChat, sendTest, restart };
   },
 };
 </script>

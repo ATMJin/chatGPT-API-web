@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build --dotenv .env.production",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --port=3100",
     "generate": "nuxt generate",
     "make docker image": "docker build -t myapp .",
     "preview": "nuxt preview",

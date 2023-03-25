@@ -8,7 +8,7 @@ export class DB_Chat {
   /** 參數 */
   option?: Option;
   /** 回復訊息 */
-  result: string = "";
+  result: string[] = [""];
   /** 時間 yyyy-MM-dd HH:mm:ss*/
   time: string = "";
   /** 結束原因 */

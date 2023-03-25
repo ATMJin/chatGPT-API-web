@@ -9,6 +9,7 @@ import {
 import { Message, Model, Role } from '~~/composables/class/chat.class';
 import { DB_Chat, Option } from '~~/composables/class/db.class';
 import { formateDate } from '~~/composables/date_formate';
+import { encode } from 'gpt-3-encoder';
 
 
 export default defineEventHandler(async (event) => {
@@ -23,6 +24,13 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'OpenAI API key not configured, please follow instructions in README.md',
     });
   }
+
+  let params = "";
+  readBody(event).then((body) => {
+    params = body.content;
+    const encoded = encode(params);
+    console.log("encoded length: ", encoded.length);
+  });
 
   try {
     await connectToDatabase();
@@ -80,7 +88,10 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const result = completion.data.choices[0].message.content;
+    // const result = completion.data.choices[0].message.content;
+    const result: string[] = completion.data.choices.map((choice) => {
+      return choice.message!.content;
+    });
     const usage = completion.data.usage;
 
     const chat_data: DB_Chat = {

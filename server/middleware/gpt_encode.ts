@@ -5,6 +5,6 @@ export default defineEventHandler((event) => {
   readBody(event).then((body) => {
     params = body.content;
     const encoded = encode(params);
-    console.log("encoded: ", encoded);
+    // console.log("encoded: ", encoded);
   });
 });

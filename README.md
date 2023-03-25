@@ -107,8 +107,8 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 
 ## TODO
 
-- [ ] docker內連接本機mongoDB
-- [ ] 頁面輸入框改成 textarea
-- [ ] 頁面結果輸出框增加因應n值切換輸出內容
-- [ ] DB的result因應n值儲存成string[]
+- [x] docker內連接本機mongoDB
+- [x] 頁面輸入框改成 textarea
+- [x] 頁面結果輸出框增加因應n值切換輸出內容
+- [x] DB的result因應n值儲存成string[]
 - [ ] 連續輸入模式時加上目前頁面上選擇的結果
