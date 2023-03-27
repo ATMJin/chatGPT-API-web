@@ -103,3 +103,9 @@ input[type="checkbox"]:checked {
   margin-top: 40px;
   white-space: pre-wrap;
 }
+
+.main .change_result_btn {
+  padding: 12px 18px;
+  margin-left: 2em;
+  margin-right: 2em;
+}
