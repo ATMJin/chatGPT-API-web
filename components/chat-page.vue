@@ -118,7 +118,8 @@ const goChat = async () => {
         content: content.value,
         option,
         continuation: continuation.value,
-        type: type.value
+        type: type.value,
+            result_index: result_index.value,
       }),
     });
 

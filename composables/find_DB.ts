@@ -46,7 +46,7 @@ export const getLastMessage = async (): Promise<Message[]> => {
 };
 
 /** 從資料庫取得上一次的結果 */
-export const getLastResult = async (): Promise<string> => {
+export const getLastResult = async (): Promise<string[]> => {
   if (getHasDB()) {
     console.log("getLastResult Start");
     const collection = getCollection();
@@ -56,12 +56,12 @@ export const getLastResult = async (): Promise<string> => {
 
     if (!last.length || !last[0].continuation) {
       console.log("getLastResult Error");
-      return "";
+      return [];
     } else {
       return last[0].result;
     }
   } else {
-    return "";
+    return [];
   }
 };
 

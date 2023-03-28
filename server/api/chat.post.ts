@@ -45,7 +45,7 @@ export default defineEventHandler(async (event) => {
       const lastResult = await getLastResult();
       if (!!lastMessage.length) {
         messages.push(...lastMessage);
-        messages.push({ role: Role.ASSISTANT, content: lastResult });
+        messages.push({ role: Role.ASSISTANT, content: lastResult[body.result_index] });
       } else {
         messages.push(...initSystemMessage);
       }
