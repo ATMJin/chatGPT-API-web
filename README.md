@@ -111,4 +111,5 @@ Check out the [deployment documentation](https://nuxt.com/docs/getting-started/d
 - [x] 頁面輸入框改成 textarea
 - [x] 頁面結果輸出框增加因應n值切換輸出內容
 - [x] DB的result因應n值儲存成string[]
-- [ ] 連續輸入模式時加上目前頁面上選擇的結果
+- [x] 連續輸入模式時加上目前頁面上選擇的結果
+- [ ] 連續輸入時 message 的 tokens 太大，刪除最前面的對話，讓 tokens 的大小在範圍內。(或許要在頁面多加一個設定，設定 result 的 tokens，然後 message 的 tokens 就是 max_tokens 減去 result 的 tokens)
