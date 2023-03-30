@@ -18,11 +18,11 @@
           <button class="change_result_btn" @click="changeResult(-1)"> &lt; </button>
           <button class="change_result_btn" @click="changeResult(1)"> &gt; </button>
         </div>
-        <p class="result">{{ result[result_index] }}</p>
         <!-- 一個讀取中的圖案 -->
         <div v-if="showLoading" class="loading">
           <img src="~~/assets/loading.gif" />
         </div>
+        <p class="result">{{ result[result_index] }}</p>
       </div>
       <div class="option">
         <select name="" id="" v-model="type">
@@ -35,7 +35,8 @@
         <label>連續對話:
           <input type="checkbox" v-model="continuation">
         </label>
-        <button @click="restart" style="padding: 12px;">Restart</button>
+        <button @click="restart" style="padding: 12px; margin-right: 0.75rem;">Restart</button>
+        <button @click="getLast" style="padding: 12px; margin-right: 0.75rem;">Get Last</button>
       </div>
     </main>
 
@@ -55,7 +56,7 @@ const option_list = ref<{
 }[]>([
   { label: "temperature", option: "temperature" },
   { label: "top_p", option: "top_p" },
-  { label: "max_tokens", option: "max_tokens" },
+  { label: "max_tokens(max 4096)", option: "max_tokens" },
   { label: "n", option: "n" },
   { label: "stop(,)", option: "stop" },
 ]);
@@ -131,6 +132,7 @@ const goChat = async () => {
 
     result.value = Array.isArray(data.result) ? data.result : [data.result];
     content.value = "";
+    result_index.value = 0;
 
   } catch (error: any) {
     // Consider implementing your own error handling logic here
@@ -170,6 +172,19 @@ const restart = async () => {
     continuation.value = false;
     console.log("restart end");
     console.log(res);
+  } catch (error: any) {
+    console.error(error);
+  }
+};
+
+const getLast = async () => {
+  console.log("getLast");
+  try {
+    const res = await fetch("/api/getLast");
+    const data = await res.json();
+    console.log("data", data);
+    result.value = data.result;
+    console.log("getLast end");
   } catch (error: any) {
     console.error(error);
   }
