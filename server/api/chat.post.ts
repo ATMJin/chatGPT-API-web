@@ -25,13 +25,6 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  let params = "";
-  readBody(event).then((body) => {
-    params = body.content;
-    const encoded = encode(params);
-    console.log("encoded length: ", encoded.length);
-  });
-
   try {
     await connectToDatabase();
 
@@ -45,6 +38,13 @@ export default defineEventHandler(async (event) => {
       const lastResult = await getLastResult();
       if (!!lastMessage.length) {
         messages.push(...lastMessage);
+
+        // 訊息tokens長度判斷，如果大於4000則刪除初始訊息後的三則訊息
+        const encoded = encode(messages.map(message => message.content).toString());
+        if (encoded.length > 4000) {
+          messages.splice(initSystemMessage.length, 6);
+        }
+
         messages.push({ role: Role.ASSISTANT, content: lastResult[body.result_index] });
       } else {
         messages.push(...initSystemMessage);
@@ -57,6 +57,7 @@ export default defineEventHandler(async (event) => {
     console.log("messages: ", messages);
 
     const option = new Option(body.option);
+    option.presence_penalty = 0.7;
     option.logit_bias = {
       11505: -100,  // "Open"
       4946: -100,   // " Open"

@@ -1,10 +1,12 @@
 {
   "private": true,
   "scripts": {
-    "build": "nuxt build --dotenv .env.production",
     "dev": "nuxt dev --port=3100",
+    "build": "nuxt build --dotenv .env.production",
+    "make docker image": "docker build -t chat_app .",
+    "run docker container": "docker run -p 3000:3000 chat_app",
+    "make and run": "pnpm run \"make docker image\" && pnpm run \"run docker container\"",
     "generate": "nuxt generate",
-    "make docker image": "docker build -t myapp .",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
