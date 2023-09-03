@@ -29,8 +29,9 @@ export default defineEventHandler(async (event) => {
     await connectToDatabase();
 
     const body = await readBody(event);
-    const content_from_web = body.content;
+    const content_from_web: string = body.content;
     const initSystemMessage: Message[] = await getInitMessage(body.type);
+    let model: Model = Model.GPT_TURBO;
 
     const messages: Message[] = [];
     if (body.continuation) {
@@ -39,10 +40,14 @@ export default defineEventHandler(async (event) => {
       if (!!lastMessage.length) {
         messages.push(...lastMessage);
 
-        // 訊息tokens長度判斷，如果大於4000則刪除初始訊息後的三則訊息
+        // 訊息tokens長度判斷，如果大於3800則將model改為 GPT_TURBO_16k
         const encoded = encode(messages.map(message => message.content).toString());
-        if (encoded.length > 4000) {
-          messages.splice(initSystemMessage.length, 6);
+        if (encoded.length > 3800) {
+          model = Model.GPT_TURBO_16k;
+        }
+        // 如果大於10000則刪除初始訊息後的三則訊息
+        if (encoded.length > 10000) {
+          messages.splice(initSystemMessage.length, 3);
         }
 
         messages.push({ role: Role.ASSISTANT, content: lastResult[body.result_index] });
@@ -67,7 +72,7 @@ export default defineEventHandler(async (event) => {
     };
 
     const Request: CreateChatCompletionRequest = {
-      model: Model.GPT_TURBO,
+      model,
       messages: messages,
       temperature: option.temperature || undefined,
       top_p: option.top_p || undefined,
