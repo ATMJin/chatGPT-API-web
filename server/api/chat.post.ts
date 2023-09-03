@@ -1,11 +1,8 @@
 import { connectToDatabase } from '~~/composables/connect_DB';
 import { insertChatMessage } from '~~/composables/insert_DB';
 import { getLastMessage, getLastResult, getInitMessage } from '~~/composables/find_DB';
-import {
-  Configuration,
-  CreateChatCompletionRequest,
-  OpenAIApi,
-} from "openai";
+import OpenAI from "openai";
+import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/chat';
 import { Message, Model, Role } from '~~/composables/class/chat.class';
 import { DB_Chat, Option } from '~~/composables/class/db.class';
 import { formateDate } from '~~/composables/date_formate';
@@ -13,12 +10,11 @@ import { encode } from 'gpt-3-encoder';
 
 
 export default defineEventHandler(async (event) => {
-  const configuration = new Configuration({
+  const openai = new OpenAI({
     apiKey: useRuntimeConfig().private.apiKey
   });
-  const openai = new OpenAIApi(configuration);
 
-  if (!configuration.apiKey) {
+  if (!openai.apiKey) {
     throw createError({
       statusCode: 500,
       statusMessage: 'OpenAI API key not configured, please follow instructions in README.md',
@@ -71,7 +67,7 @@ export default defineEventHandler(async (event) => {
       1872: -100,   // "ai"
     };
 
-    const Request: CreateChatCompletionRequest = {
+    const Request: ChatCompletionCreateParamsNonStreaming = {
       model,
       messages: messages,
       temperature: option.temperature || undefined,
@@ -83,22 +79,22 @@ export default defineEventHandler(async (event) => {
     };
     console.log("Request: ", Request);
 
-    const completion = await openai.createChatCompletion(Request);
+    const openaiChatCompletion = openai.chat.completions;
+    const completionResult = await openaiChatCompletion.create(Request);
 
-    console.log(completion.data.choices);
+    console.log(completionResult.choices);
 
-    if (!completion.data.choices[0].message) {
+    if (!completionResult.choices[0].message) {
       throw createError({
         statusCode: 501,
-        statusMessage: 'completion.data.choices[0].message == undefined',
+        statusMessage: 'completion.choices[0].message == undefined',
       });
     }
 
-    // const result = completion.data.choices[0].message.content;
-    const result: string[] = completion.data.choices.map((choice) => {
-      return choice.message!.content;
+    const result: string[] = completionResult.choices.map((choice) => {
+      return choice.message.content ?? '';
     });
-    const usage = completion.data.usage;
+    const usage = completionResult.usage;
 
     const chat_data: DB_Chat = {
       model: Model.GPT_TURBO,
@@ -106,7 +102,7 @@ export default defineEventHandler(async (event) => {
       result: result,
       time: formateDate(new Date()),
       option: option,
-      finish_reason: completion.data.choices[0].finish_reason,
+      finish_reason: completionResult.choices[0].finish_reason,
       usage: {
         prompt_tokens: usage?.prompt_tokens,
         completion_tokens: usage?.completion_tokens,

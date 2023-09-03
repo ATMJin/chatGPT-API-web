@@ -4,7 +4,7 @@ import { getLastOption, getLastContinuation, getAllType } from '~~/composables/f
 export default defineEventHandler(async (event) => {
   try {
     console.log("API onInit Start");
-    await connectToDatabase();
+    const hasDB = await connectToDatabase();
     console.log("API onInit connectToDatabase Success");
     const option = await getLastOption();
     console.log("option: ", option);
@@ -18,6 +18,7 @@ export default defineEventHandler(async (event) => {
       option: option,
       continuation: continuation,
       type_list: type_list,
+      isConnectDB: hasDB,
     };
   } catch {
     // throw new Error("API onInit Error");
@@ -25,6 +26,7 @@ export default defineEventHandler(async (event) => {
       option: {},
       continuation: false,
       type_list: [],
+      isConnectDB: false,
     };
   }
 });
