@@ -25,7 +25,7 @@
         <p class="result">{{ result[result_index] }}</p>
       </div>
       <div class="option">
-        <select name="" id="" v-model="type">
+        <select name="" id="" v-model="type" v-if="isConnectDB">
           <option value="" disabled>請選擇設定</option>
           <option v-for="item in type_list" :value="item">{{ item }}</option>
         </select>
@@ -47,9 +47,13 @@
 import { ref } from 'vue';
 import { Option } from '~~/composables/class/db.class';
 
+/** 輸入的內容 */
 const content = ref("");
+/** 結果列表 */
 const result = ref<string[]>([""]);
+/** 是否顯示讀取中的圖案 */
 const showLoading = ref(false);
+/** 網頁上的GPT設定_顯示用 */
 const option_list = ref<{
   label: string;
   option: keyof Option;
@@ -60,7 +64,7 @@ const option_list = ref<{
   { label: "n", option: "n" },
   { label: "stop(,)", option: "stop" },
 ]);
-
+/** 網頁上的GPT設定 */
 const option_web = ref<Option>({
   temperature: 1,
   top_p: undefined,
@@ -68,11 +72,18 @@ const option_web = ref<Option>({
   n: 1,
   stop: undefined
 });
+/** 是否連續對話 */
 const continuation = ref(false);
+/** 對話類型清單 */
 const type_list = ref<string[]>([]);
+/** 設定的對話類型 */
 const type = ref("");
+/** 當前顯示的結果 */
 const result_index = ref(0);
+/** 是否連接資料庫 */
+const isConnectDB = ref(false);
 
+/** 測試用的打 API Method */
 const sendTest = async () => {
   showLoading.value = true;
 
@@ -104,6 +115,7 @@ const sendTest = async () => {
   }
 };
 
+/** 發送訊息 */
 const goChat = async () => {
   showLoading.value = true;
   const option = option_web.value;
@@ -141,7 +153,7 @@ const goChat = async () => {
   }
 };
 
-
+/** 初始化 */
 const onInit = async () => {
   console.log("onInit");
 
@@ -150,13 +162,11 @@ const onInit = async () => {
       method: "GET"
     });
     const data = await response.json();
-    console.log("data", data);
-    const option_DB = data.option;
-    option_web.value = option_DB;
-    const continuation_DB = data.continuation;
-    continuation.value = continuation_DB;
-    const type_list_DB = data.type_list;
-    type_list.value = type_list_DB;
+    console.log("Init data", data);
+    option_web.value = data.option;
+    continuation.value = data.continuation;
+    type_list.value = data.type_list;
+    isConnectDB.value = data.isConnectDB;
 
     console.log("onInit end");
   } catch (error: any) {
@@ -164,6 +174,7 @@ const onInit = async () => {
   }
 };
 
+/** 重新開始 */
 const restart = async () => {
   console.log("restart");
   try {
@@ -177,12 +188,13 @@ const restart = async () => {
   }
 };
 
+/** 取得最後一筆 */
 const getLast = async () => {
   console.log("getLast");
   try {
     const res = await fetch("/api/getLast");
     const data = await res.json();
-    console.log("data", data);
+    console.log("Last data: ", data);
     result.value = data.result;
     console.log("getLast end");
   } catch (error: any) {
@@ -190,6 +202,7 @@ const getLast = async () => {
   }
 };
 
+/** 改變顯示的結果 */
 const changeResult = (num: number) => {
   result_index.value += num;
   if (result_index.value < 0) {
@@ -199,6 +212,7 @@ const changeResult = (num: number) => {
   }
 };
 
+/** 初始化 */
 onBeforeMount(() => {
   onInit();
 });

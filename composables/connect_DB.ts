@@ -23,8 +23,10 @@ export const connectToDatabase = async () => {
       hasDB = true;
     } catch {
       console.log("ConnectToDatabase Error");
+      hasDB = false;
     }
   }
+  return hasDB;
 };
 
 /** 取得DB */
