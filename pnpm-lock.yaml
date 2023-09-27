@@ -5,6 +5,7 @@ specifiers:
   '@types/markdown-it': ^13.0.1
   '@volar-plugins/vetur': latest
   gpt-3-encoder: ^1.1.4
+  idb: ^7.1.1
   idb-keyval: ^6.2.1
   log4js: ^6.9.1
   markdown-it: ^13.0.2
@@ -16,6 +17,7 @@ specifiers:
 
 dependencies:
   gpt-3-encoder: 1.1.4
+  idb: 7.1.1
   idb-keyval: 6.2.1
   log4js: 6.9.1
   mongodb: 5.9.0
@@ -3263,6 +3265,10 @@ packages:
 
   /idb-keyval/6.2.1:
     resolution: {integrity: sha512-8Sb3veuYCyrZL+VBt9LJfZjLUPWVvqn8tG28VqYNFCo43KHcKuq+b4EiXGeuaLAQWL2YmyDgMp2aSpH9JHsEQg==}
+
+  /idb/7.1.1:
+    resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
+    dev: false
 
   /ignore/5.2.4:
     resolution: {integrity: sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==}
