@@ -1,4 +1,4 @@
-import { DB_Chat } from './class/db.class';
+import { DB_Chat } from '../class/db.class';
 import { getCollection, getHasDB } from "./connect_DB";
 
 export const insertChatMessage = async (chat_data: DB_Chat) => {

@@ -1,5 +1,5 @@
-import { Message } from "./class/chat.class";
-import { Option } from "./class/db.class";
+import { Message } from "../class/chat.class";
+import { Option } from "../class/db.class";
 import { getCollection, getCollectionSystem, getHasDB } from "./connect_DB";
 
 /** 從資料庫取得上一次的參數 */

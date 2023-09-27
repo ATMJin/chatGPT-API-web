@@ -1,6 +1,6 @@
-import { connectToDatabase } from '~~/composables/connect_DB';
-import { insertChatMessage } from '~~/composables/insert_DB';
-import { getLastMessage, getLastResult, getInitMessage } from '~~/composables/find_DB';
+import { connectToDatabase } from '~/composables/mongo_DB/connect_DB';
+import { insertChatMessage } from '~/composables/mongo_DB/insert_DB';
+import { getLastMessage, getLastResult, getInitMessage } from '~/composables/mongo_DB/find_DB';
 import OpenAI from "openai";
 import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/chat';
 import { Message, Model, Role } from '~~/composables/class/chat.class';
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    await connectToDatabase();
+    const connectResult = await connectToDatabase();
 
     const body: ChatRequest = await readBody(event);
     const content_from_web: string = body.content;
@@ -106,7 +106,7 @@ export default defineEventHandler(async (event) => {
     const usage = completionResult.usage;
 
     const chat_data: DB_Chat = {
-      model: Model.GPT_TURBO,
+      model: <Model>Request.model,
       messages: messages,
       result: result,
       time: formateDate(new Date()),

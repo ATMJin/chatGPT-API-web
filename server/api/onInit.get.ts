@@ -1,5 +1,5 @@
-import { connectToDatabase, getCollection } from '~~/composables/connect_DB';
-import { getLastOption, getLastContinuation, getAllType } from '~~/composables/find_DB';
+import { connectToDatabase, getCollection } from '~/composables/mongo_DB/connect_DB';
+import { getLastOption, getLastContinuation, getAllType } from '~/composables/mongo_DB/find_DB';
 
 export default defineEventHandler(async (event) => {
   try {

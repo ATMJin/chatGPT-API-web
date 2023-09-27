@@ -1,4 +1,4 @@
-import { connectToDatabase, getDb } from './../../composables/connect_DB';
+import { connectToDatabase, getDb } from '../../composables/mongo_DB/connect_DB';
 
 export default defineEventHandler(async (event) => {
   await connectToDatabase();
