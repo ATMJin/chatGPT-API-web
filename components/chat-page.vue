@@ -9,7 +9,6 @@
     <main class="main" style="position: relative;">
 
       <div class="main" style="padding-top: 0;">
-        <img src="/dog.png" class="icon" />
         <h3>chatGPT API 測試</h3>
         <textarea name="content" placeholder="輸入訊息" v-model="content" cols="30" rows="10"></textarea>
         <button @click="goChat">發送訊息</button>
@@ -24,13 +23,18 @@
         </div>
         <p class="result">{{ result[result_index] }}</p>
       </div>
-      <div class="option">
+      <div class="option mt-30px">
         <select name="" id="" v-model="type" v-if="isConnectDB">
           <option value="" disabled>請選擇設定</option>
           <option v-for="item in type_list" :value="item">{{ item }}</option>
         </select>
         <label v-for="item in option_list">{{ item.label }}
           <input type="text" v-model.number="option_web[item.option]">
+        </label>
+      </div>
+      <div class="option">
+        <label>GPT-4:
+          <input type="checkbox" v-model="gpt4">
         </label>
         <label>連續對話:
           <input type="checkbox" v-model="continuation">
@@ -60,9 +64,9 @@ const option_list = ref<{
 }[]>([
   { label: "temperature", option: "temperature" },
   { label: "top_p", option: "top_p" },
-  { label: "max_tokens(max 4096)", option: "max_tokens" },
+  { label: "max_tokens", option: "max_tokens" },
   { label: "n", option: "n" },
-  { label: "stop(,)", option: "stop" },
+  // { label: "stop(,)", option: "stop" }, 
 ]);
 /** 網頁上的GPT設定 */
 const option_web = ref<Option>({
@@ -74,6 +78,8 @@ const option_web = ref<Option>({
 });
 /** 是否連續對話 */
 const continuation = ref(false);
+/** 是否使用GPT-4 */
+const gpt4 = ref(false);
 /** 對話類型清單 */
 const type_list = ref<string[]>([]);
 /** 設定的對話類型 */
@@ -131,8 +137,9 @@ const goChat = async () => {
         content: content.value,
         option,
         continuation: continuation.value,
+        gpt4: gpt4.value,
         type: type.value,
-            result_index: result_index.value,
+        result_index: result_index.value,
       }),
     });
 
@@ -222,7 +229,7 @@ onBeforeMount(() => {
 <style>
 @import "assets/index.module.css";
 
-.option {
+.mt-30px {
   margin-top: 30px;
 }
 

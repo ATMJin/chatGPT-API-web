@@ -7,6 +7,7 @@ import { Message, Model, Role } from '~~/composables/class/chat.class';
 import { DB_Chat, Option } from '~~/composables/class/db.class';
 import { formateDate } from '~~/composables/date_formate';
 import { encode } from 'gpt-3-encoder';
+import { ChatRequest } from '~/composables/class/web_req_res.class';
 
 
 export default defineEventHandler(async (event) => {
@@ -24,10 +25,13 @@ export default defineEventHandler(async (event) => {
   try {
     await connectToDatabase();
 
-    const body = await readBody(event);
+    const body: ChatRequest = await readBody(event);
     const content_from_web: string = body.content;
     const initSystemMessage: Message[] = await getInitMessage(body.type);
     let model: Model = Model.GPT_TURBO;
+    if (body.gpt4) {
+      model = Model.GPT_4;
+    }
 
     const messages: Message[] = [];
     if (body.continuation) {
@@ -36,11 +40,12 @@ export default defineEventHandler(async (event) => {
       if (!!lastMessage.length) {
         messages.push(...lastMessage);
 
-        // 訊息tokens長度判斷，如果大於3800則將model改為 GPT_TURBO_16k
+        // 訊息tokens長度判斷，如果沒使用gpt-4時大於3800，或使用gpt-4時大於7000，則將model改為 GPT_TURBO_16k
         const encoded = encode(messages.map(message => message.content).toString());
-        if (encoded.length > 3800) {
+        if ((!body.gpt4 && encoded.length > 3800) || (body.gpt4 && encoded.length > 7000)) {
           model = Model.GPT_TURBO_16k;
         }
+
         // 如果大於10000則刪除初始訊息後的三則訊息
         if (encoded.length > 10000) {
           messages.splice(initSystemMessage.length, 3);
@@ -54,6 +59,10 @@ export default defineEventHandler(async (event) => {
       messages.push(...initSystemMessage);
     }
     messages.push({ role: Role.USER, content: content_from_web });
+    const encoded = encode(messages.map(message => message.content).toString());
+    if (encoded.length > 3800) {
+      model = Model.GPT_TURBO_16k;
+    }
 
     console.log("messages: ", messages);
 

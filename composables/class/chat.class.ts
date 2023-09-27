@@ -81,7 +81,11 @@ export class Message {
 export enum Model {
   GPT_TURBO = "gpt-3.5-turbo",
   GPT_TURBO_0301 = "gpt-3.5-turbo-0301",
+  GPT_TURBO_0613 = "gpt-3.5-turbo-0613",
   GPT_TURBO_16k = "gpt-3.5-turbo-16k",
+  GPT_TURBO_16k_0613 = "gpt-3.5-turbo-16k-0613",
+  GPT_4_0613 = "gpt-4-0613",
+  GPT_4 = "gpt-4",
 }
 
 
