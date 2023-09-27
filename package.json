@@ -12,14 +12,17 @@
   },
   "devDependencies": {
     "@nuxtjs/dotenv": "^1.4.1",
-    "nuxt": "^3.2.3",
-    "@volar-plugins/vetur": "latest"
+    "@types/markdown-it": "^13.0.1",
+    "@volar-plugins/vetur": "latest",
+    "markdown-it": "^13.0.2",
+    "nuxt": "^3.2.3"
   },
   "dependencies": {
     "gpt-3-encoder": "^1.1.4",
     "log4js": "^6.9.1",
     "mongodb": "^5.1.0",
     "mongoose": "^7.0.1",
-    "openai": "^4.4.0"
+    "openai": "^4.4.0",
+    "vue3-markdown-it": "^1.0.10"
   }
 }

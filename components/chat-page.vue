@@ -50,6 +50,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { Option } from '~~/composables/class/db.class';
+import { RenderMarkdown } from '~~/composables/markdown';
 
 /** 輸入的內容 */
 const content = ref("");
@@ -152,6 +153,7 @@ const goChat = async () => {
     result.value = Array.isArray(data.result) ? data.result : [data.result];
     content.value = "";
     result_index.value = 0;
+    console.log(RenderMarkdown(result.value[0]));
 
   } catch (error: any) {
     // Consider implementing your own error handling logic here
